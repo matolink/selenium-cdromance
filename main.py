@@ -1,128 +1,19 @@
-from genericpath import exists
-import os
-from resource import prlimit
-import time
-import undetected_chromedriver as uc
-from selenium.webdriver.common.by import By
-from selenium.webdriver.support.ui import WebDriverWait
-import Levenshtein as lev
-import waitdl as wd
-from re import search
+import openpyxl
+from program import pg
 
+excel = 'JUEGOS.xlsx'
 DIR = '/home/matito/Downloads/'
-REG = ['Region USA','Region Japan','Region Europe'] #Europe
-CON = 'PSX'
-lev2 = 99
-excel = 'Metal gear solid'
-list1 = []
-list2 = []
-detlist = []
-regionlist = []
-a = []
-cn = []
-li = []
-roms = []
-erase = []
-disc = False
+CON = 'GBA'
 
-driver = uc.Chrome()
-driver.implicitly_wait(30)
-driver.get("https://cdromance.com/")
-sb = driver.find_element(By.CLASS_NAME, "search-field")
-sb.click()
-sb.send_keys(excel) 
-sb.submit()
-
-
-gc = driver.find_elements(By.CLASS_NAME, 'game-container')
-assert(len(gc)!=0), "ERROR WITH GAME " + excel + ": Game not found"
-
-for i in range(len(gc)):
-    if gc[i].get_attribute("style"):
-        erase.append(i)
-        continue
-    else:
-        detlist.append(gc[i].find_element(By.CLASS_NAME, 'details'))
-
-if len(erase) != 0:
-    for i in range(len(erase)):
-        del gc[i]
-
-for i in range(len(detlist)):
-    regionlist.append(detlist[i].find_element(By.CLASS_NAME, 'region'))
-
-for i in range(len(regionlist)):
-    if regionlist[i].get_attribute("title") == REG[0]:
-        list1.append(gc[i])
-    else:
-        continue
-
-if len(list1) == 0:
-    for i in range(len(regionlist)):
-        if regionlist[i].get_attribute("title") == REG[1]:
-            list1.append(gc[i])
-        else:
-            continue
-
-if len(list1) == 0:
-    for i in range(len(regionlist)):
-        if regionlist[i].get_attribute("title") == REG[2]:
-            list1.append(gc[i])
-        else:
-            continue
-
-for i in range(len(list1)):
-    a.append(list1[i].find_element(By.TAG_NAME, 'a'))
-
-for i in range(len(a)):
-    cn.append(a[i].find_element(By.CLASS_NAME, 'console'))
-
-for i in range(len(cn)):
-    if cn[i].text == CON:
-        list2.append(list1[i])
-
-assert(len(list2)!=0), "ERROR WITH GAME " + excel + ": Console not found"
-
-for i in range(len(list2)):
-    li.append(list2[i].find_element(By.CLASS_NAME, 'game-title'))
-
-for titles in li:
-    lev1 = lev.distance(titles.text,excel)
-    if lev1 < lev2:
-        lev2 = lev1
-        final_text = titles.text
-
-print('The Game to Download is ' + final_text)
-
-for i in range(len(li)):
-    if final_text == li[i].text:
-        game = list2[i]
-
-game.click()
-
-table = driver.find_element(By.CLASS_NAME, 'download-links')
-roms = table.find_elements(By. TAG_NAME, 'button')
-for i in range(len(roms)):
-    if search('Disc',roms[i].get_attribute('data-filename')):
-        name = roms[i].get_attribute('data-filename')
-        roms[i].click()
-        wd.waitdl(name, DIR)
-        disc = True
-    else:
-        continue
-
-if disc == False:
-    name = roms[0].get_attribute('data-filename')
-    roms[0].click()
-    wd.waitdl(name, DIR)
-
-#dl = driver.find_element(By.ID, 'dl-btn-0')
-#name = dl.get_attribute("data-filename")
-#dl.click()
-#while True:
-        #if os.path.exists(DIR + name):
-            #break
-        #else:
-            #print('else')
-            #time.sleep(10)
-driver.close()
+wb_obj = openpyxl.load_workbook(excel)
+sheet_obj = wb_obj.active
+max_row = sheet_obj.max_row
+#for i in range(2, max_row):
+    #GAME = sheet_obj.cell(row=i,column=1)
+    #if GAME.value == None:
+        #exit()
+    #else:
+        #print(GAME.value, i)
+        #pg(GAME.value,DIR,CON)
+pg("Castlevania harmony of despair",DIR,CON)
+pg("mario kart",DIR,CON)
