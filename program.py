@@ -28,11 +28,11 @@ def pg(excel,DIR,CON):
     time.sleep(5)
 
     if driver.find_elements(By.CLASS_NAME, 'no-results'):
-        exit()
+        driver.close()
+        print('Game not Found')
+        not_found = True
+        return 
     gc = driver.find_elements(By.CLASS_NAME, 'game-container')
-    if len(gc) == 0:
-        print("game not found")
-        exit()
 
     for i in range(len(gc)):
         if gc[i].get_attribute("style"):
@@ -78,7 +78,10 @@ def pg(excel,DIR,CON):
         if cn[i].text == CON:
             list2.append(list1[i])
 
-    assert(len(list2)!=0), "ERROR WITH GAME " + excel + ": Console not found"
+    if(len(list2)==0):
+        print("Console not found")
+        not_found = True
+        return not_found
 
     for i in range(len(list2)):
         li.append(list2[i].find_element(By.CLASS_NAME, 'game-title'))
@@ -88,8 +91,6 @@ def pg(excel,DIR,CON):
         if lev1 < lev2:
             lev2 = lev1
             final_text = titles.text
-
-    print('link found')
 
     for i in range(len(li)):
         if final_text == li[i].text:
