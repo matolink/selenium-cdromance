@@ -9,6 +9,5 @@ def waitdl(game):
                 print('Download Finished!')
                 break
             else:
-                print(game.__class__.path + game.file_name)
                 print('downloading')
                 time.sleep(10)

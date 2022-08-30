@@ -105,10 +105,10 @@ def pg(game):
             game.file_name = roms[i].get_attribute('data-filename')
             roms[i].send_keys(Keys.ARROW_DOWN);
             time.sleep(2)
-            roms[i].click()
-            game.wait()
-            # wd.waitdl(name, game.path)
-            disc = True
+            if game.check() == False:
+                roms[i].click()
+                game.wait()
+                disc = True
         else:
             continue
 
@@ -116,8 +116,8 @@ def pg(game):
         game.file_name = roms[0].get_attribute('data-filename')
         roms[0].send_keys(Keys.ARROW_DOWN);
         time.sleep(2)
-        roms[0].click()
-        game.wait()
-       # wd.waitdl(name, game.path)
+        if game.check() == False:
+            roms[0].click()
+            game.wait()
 
     driver.close()
