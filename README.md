@@ -1,5 +1,10 @@
 # selenium-cdromance
 Script used to download games from cdromance
+# Install
+install Python dependencies
+`pip install -r requirements.txt`
+
+also you need to have a Chrome Browser installed and pip installed
 # Usage
 Change variable values for:
 - CON = Console you want to download games for.

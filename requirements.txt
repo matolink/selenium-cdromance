@@ -1,0 +1,5 @@
+mutagen
+undetected-chromedriver
+openpyxl
+levenshtein
+selenium
