@@ -30,7 +30,7 @@ def pg(game):
     if driver.find_elements(By.CLASS_NAME, 'no-results'):
         driver.close()
         print('Game not Found')
-        not_found = True
+        not_found = True 
         return not_found
     gc = driver.find_elements(By.CLASS_NAME, 'game-container')
 
@@ -44,6 +44,10 @@ def pg(game):
     if len(erase) != 0:
         for i in range(len(erase)):
             del gc[erase[i]]
+            try:
+                erase[i+1] = erase[i+1] - 1
+            except IndexError:
+                pass
 
     for i in range(len(detlist)):
         regionlist.append(detlist[i].find_element(By.CLASS_NAME, 'region'))
@@ -69,6 +73,8 @@ def pg(game):
                 continue
 
     for i in range(len(list1)):
+        #print('Containter numero '+str(i))
+        #print (list1[i].get_attribute('innerHTML'))
         a.append(list1[i].find_element(By.TAG_NAME, "a"))
 
     for i in range(len(a)):
@@ -105,7 +111,7 @@ def pg(game):
             game.file_name = roms[i].get_attribute('data-filename')
             roms[i].send_keys(Keys.ARROW_DOWN);
             time.sleep(2)
-            if game.check() == False:
+            if game.check():
                 roms[i].click()
                 game.wait()
                 disc = True
@@ -116,7 +122,7 @@ def pg(game):
         game.file_name = roms[0].get_attribute('data-filename')
         roms[0].send_keys(Keys.ARROW_DOWN);
         time.sleep(2)
-        if game.check() == False:
+        if game.check():
             roms[0].click()
             game.wait()
 

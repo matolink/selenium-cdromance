@@ -1,10 +1,10 @@
 import openpyxl
 from openpyxl import Workbook
 from program import pg
-from check import ck
+import check as ck
 import waitdl as wd
 
-excel = 'MENTIRITAS.xlsx'
+excel = 'TEST.xlsx'
 DIR = '/home/matito/Downloads/'
 CON = 'GBA'
 
@@ -16,11 +16,13 @@ class Game:
     def __init__(self, name):
         self.name = name
     def program(self):
-        pg(self)
+        a = pg(self)
+        return a
     def wait(self):
         wd.waitdl(self)
     def check(self):
-        ck(self)
+        a = ck.check(self)
+        return a
         
 
 if 'DIR' in locals():
@@ -37,7 +39,7 @@ if 'DIR' in locals():
         else:
             GAME.num = i - 1
             print(i-1, GAME.name.value)
-            not_found = pg(GAME)
+            not_found = GAME.program()
             if(not_found == True):
                 sheet["A"+str(nf)] = str(GAME.num)+' '+GAME.name.value
                 nf+=1
