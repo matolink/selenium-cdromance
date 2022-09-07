@@ -5,6 +5,7 @@ from selenium.webdriver.common.keys import Keys
 import Levenshtein as lev
 from re import search
 
+
 def pg(game):
     list1 = []
     list2 = []
@@ -16,21 +17,21 @@ def pg(game):
     roms = []
     erase = []
     disc = False
-    REG = ['USA','Region Japan','Region Europe']
-    lev2=99
+    REG = ['USA', 'Region Japan', 'Region Europe']
+    lev2 = 99
     driver = uc.Chrome()
     driver.implicitly_wait(4)
     driver.get("https://cdromance.com/")
     sb = driver.find_element(By.CLASS_NAME, "search-field")
     sb.click()
-    sb.send_keys(game.name.value) 
+    sb.send_keys(game.name.value)
     sb.submit()
     time.sleep(5)
 
     if driver.find_elements(By.CLASS_NAME, 'no-results'):
         driver.close()
         print('Game not Found')
-        not_found = True 
+        not_found = True
         return not_found
     gc = driver.find_elements(By.CLASS_NAME, 'game-container')
 
@@ -73,8 +74,8 @@ def pg(game):
                 continue
 
     for i in range(len(list1)):
-        #print('Containter numero '+str(i))
-        #print (list1[i].get_attribute('innerHTML'))
+        # print('Containter numero '+str(i))
+        # print (list1[i].get_attribute('innerHTML'))
         a.append(list1[i].find_element(By.TAG_NAME, "a"))
 
     for i in range(len(a)):
@@ -84,7 +85,7 @@ def pg(game):
         if cn[i].text == game.console:
             list2.append(list1[i])
 
-    if(len(list2)==0):
+    if(len(list2) == 0):
         print("Console not found")
         not_found = True
         return not_found
@@ -93,7 +94,7 @@ def pg(game):
         li.append(list2[i].find_element(By.CLASS_NAME, 'game-title'))
 
     for titles in li:
-        lev1 = lev.distance(titles.text,game.name.value)
+        lev1 = lev.distance(titles.text, game.name.value)
         if lev1 < lev2:
             lev2 = lev1
             final_text = titles.text
@@ -107,9 +108,9 @@ def pg(game):
     table = driver.find_element(By.CLASS_NAME, 'download-links')
     roms = table.find_elements(By. TAG_NAME, 'button')
     for i in range(len(roms)):
-        if search('Disc',roms[i].get_attribute('data-filename')):
+        if search('Disc', roms[i].get_attribute('data-filename')):
             game.file_name = roms[i].get_attribute('data-filename')
-            roms[i].send_keys(Keys.ARROW_DOWN);
+            roms[i].send_keys(Keys.ARROW_DOWN)
             time.sleep(2)
             if game.check():
                 roms[i].click()
@@ -118,9 +119,9 @@ def pg(game):
         else:
             continue
 
-    if disc == False:
+    if disc is False:
         game.file_name = roms[0].get_attribute('data-filename')
-        roms[0].send_keys(Keys.ARROW_DOWN);
+        roms[0].send_keys(Keys.ARROW_DOWN)
         time.sleep(2)
         if game.check():
             roms[0].click()
